@@ -39,3 +39,6 @@ clean:
 
 mpi_run: mpi_matrix_mult
 	mpirun -n 10 ./mpi_matrix_mult
+
+benchmark: ${EXECUTABLES}
+	@bash benchmark.sh
