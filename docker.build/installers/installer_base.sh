@@ -66,10 +66,15 @@ function create_so_symlink() {
 
 RCFILES_DIR="/opt/apollo/rcfiles"
 DEST_DIR_BASE="/opt/apollo/pkgs"
+SYSROOT_DIR="/opt/apollo/sysroot"
 ARCHIVE_DIR="/tmp/archive"
 
 if [[ ! -d "${DEST_DIR_BASE}" ]]; then
     mkdir -p "${DEST_DIR_BASE}"
+fi
+
+if [[ ! -d "${SYSROOT_DIR}" ]]; then
+    mkdir -p "${SYSROOT_DIR}"
 fi
 
 # sha256sum was provided by coreutils
