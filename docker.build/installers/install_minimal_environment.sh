@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-
+#! /bin/sh
+# shellcheck shell=sh
 ###############################################################################
 # Copyright 2020 The Apollo Authors. All Rights Reserved.
 #
@@ -17,28 +17,28 @@
 ###############################################################################
 
 # Fail on first error.
-# set -e
-set -x
+set -e
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
+MY_GEO=$1
 
-MY_GEO=$1; shift
+# Uncomment iff using POSIX shell no longer fails
+# shift
+
 ARCH="$(uname -m)"
 
 ##----------------------------##
 ##  APT sources.list settings |
 ##----------------------------##
-. /tmp/installers/installer_base.sh
-
-if [[ "${ARCH}" == "x86_64" ]]; then
-    if [[ "${MY_GEO}" == "cn" ]]; then
+RCFILES_DIR=/opt/apollo/rcfiles
+if [ "${ARCH}" = "x86_64" ]; then
+    if [ "${MY_GEO}" = "cn" ]; then
         cp -f "${RCFILES_DIR}/sources.list.cn.x86_64" /etc/apt/sources.list
         # sed -i 's/nvidia.com/nvidia.cn/g' /etc/apt/sources.list.d/nvidia-ml.list
     else
         sed -i 's/archive.ubuntu.com/us.archive.ubuntu.com/g' /etc/apt/sources.list
     fi
 else # aarch64
-    if [[ "${MY_GEO}" == "cn" ]]; then
+    if [ "${MY_GEO}" = "cn" ]; then
         cp -f "${RCFILES_DIR}/sources.list.cn.aarch64" /etc/apt/sources.list
     fi
 fi
@@ -52,6 +52,7 @@ apt-get -y update && \
     build-essential \
     autotools-dev \
     apt-file \
+    bash \
     sudo \
     gcc-7 \
     g++-7 \
@@ -85,8 +86,8 @@ sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g'
 ## Python Setings |
 ##----------------##
 
-if [[ "${MY_GEO}" == "cn" ]]; then
-    if [[ "${ARCH}" == "x86_64" ]]; then
+if [ "${MY_GEO}" = "cn" ]; then
+    if [ "${ARCH}" = "x86_64" ]; then
         # Mirror from Tsinghua Univ.
         PYPI_MIRROR="https://pypi.tuna.tsinghua.edu.cn/simple"
         python3 -m pip install --no-cache-dir -i "$PYPI_MIRROR" pip -U
