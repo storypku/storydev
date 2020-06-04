@@ -69,6 +69,8 @@ DEST_DIR_BASE="/opt/apollo/pkgs"
 SYSROOT_DIR="/opt/apollo/sysroot"
 ARCHIVE_DIR="/tmp/archive"
 
+DOWNLOAD_LOG="/opt/apollo/build.log"
+
 LOCAL_HTTP_ADDR="http://172.17.0.1:8388"
 
 if [[ ! -d "${DEST_DIR_BASE}" ]]; then
@@ -77,6 +79,10 @@ fi
 
 if [[ ! -d "${SYSROOT_DIR}" ]]; then
     mkdir -p "${SYSROOT_DIR}"
+fi
+
+if [[ ! -f "${DOWNLOAD_LOG}" ]]; then
+    echo "#Summary: Apollo Package Downloads" > "${DOWNLOAD_LOG}"
 fi
 
 function local_http_cached() {
@@ -105,6 +111,8 @@ function download_if_not_cached {
     local expected_cs=$2
     local url=$3
     local use_cache=0
+
+    echo -e "${pkg_name}\t${expected_cs}\t${url}" >> "${DOWNLOAD_LOG}"
 
     if local_http_cached "${pkg_name}" ; then
         use_cache=2
