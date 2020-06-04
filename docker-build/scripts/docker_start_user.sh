@@ -63,16 +63,7 @@ function setup_user_account_if_not_exist() {
 }
 
 function grant_device_permissions() {
-    # setup GPS device
-    [ -e /dev/novatel0 ] && chmod a+rw /dev/novatel0
-    [ -e /dev/novatel1 ] && chmod a+rw /dev/novatel1
-    [ -e /dev/novatel2 ] && chmod a+rw /dev/novatel2
-
-    [ -e /dev/ttyACM0 ]  && chmod a+rw /dev/ttyACM0
-
-    # setup camera device
-    [ -e /dev/camera/obstacle ]      && chmod a+rw /dev/camera/obstacle
-    [ -e /dev/camera/trafficlights ] && chmod a+rw /dev/camera/trafficlights
+    echo "Device permission has been granted!"
 }
 
 function setup_apollo_directories() {

@@ -69,6 +69,8 @@ DEST_DIR_BASE="/opt/apollo/pkgs"
 SYSROOT_DIR="/opt/apollo/sysroot"
 ARCHIVE_DIR="/tmp/archive"
 
+LOCAL_HTTP_ADDR="http://172.17.0.1:8388"
+
 if [[ ! -d "${DEST_DIR_BASE}" ]]; then
     mkdir -p "${DEST_DIR_BASE}"
 fi
@@ -77,47 +79,82 @@ if [[ ! -d "${SYSROOT_DIR}" ]]; then
     mkdir -p "${SYSROOT_DIR}"
 fi
 
-# sha256sum was provided by coreutils
-function download_if_not_cached {
-  local pkg_name=$1
-  local checksum_expected=$2
-  local url=$3
-  local use_cache=0
-  if [ -e "$ARCHIVE_DIR/$pkg_name" ]; then
-    checksum_actual=$(sha256sum "$ARCHIVE_DIR/$pkg_name" | awk '{print $1}')
-    if [ x"$checksum_actual" = x"$checksum_expected" ]; then
-      info "package $pkg_name found in fscache, will use it."
-      use_cache=1
-    else
-      warning "package $pkg_name found in fscache, but checksum mismatch."
-      warning "    expecting $checksum_expected, got $checksum_actual."
+function local_http_cached() {
+    if /usr/bin/curl -sfI "${LOCAL_HTTP_ADDR}/$1"; then
+        return
     fi
-  fi
-
-  local my_schema
-  my_schema=$(package_schema "$url" "$pkg_name")
-
-  if [ $use_cache -eq 0 ]; then
-    if [[ "$my_schema" == "http" ]]; then
-      info "Manually download $pkg_name ..."
-      wget "$url" -O "$pkg_name"
-      ok "Successfully downloaded $pkg_name"
-    elif [[ "$my_schema" == "git" ]]; then
-      info "Clone into git repo $url..."
-      git clone --recurse-submodules --single-branch "$url"
-      ok "Successfully cloned git repo: $url"
-    else
-      error "Unknown schema for package \"$pkg_name\", url=\"$url\""
-    fi
-  else
-    info "Congrats, cache hit ${pkg_name}, schema ${my_schema}, will use it."
-    if [ "$my_schema" = "http" ]; then
-      ln -s "$ARCHIVE_DIR/${pkg_name}" "$pkg_name"
-    elif [ "$my_schema" = "git" ]; then
-      tar xzf "$ARCHIVE_DIR/${pkg_name}"
-    else
-      error "Unknown schema for package \"$pkg_name\", url=\"$url\""
-    fi
-  fi
+    false
 }
 
+function _checksum_check_pass() {
+    local pkg="$1"
+    local expected_cs="$2"
+    local actual_cs=$(/usr/bin/sha256sum "${pkg}" | awk '{print $1}')
+    if [[ "${actual_cs}" == "${expected_cs}" ]]; then
+        true
+    else
+        warning "$(basename ${pkg}): checksum mismatch, ${expected_cs}" \
+                "exected, got: ${actual_cs}"
+        false
+    fi
+}
+
+# sha256sum was provided by coreutils
+function download_if_not_cached {
+    local pkg_name=$1
+    local expected_cs=$2
+    local url=$3
+    local use_cache=0
+
+    if local_http_cached "${pkg_name}" ; then
+        use_cache=2
+        local local_addr="${LOCAL_HTTP_ADDR}/${pkg_name}"
+        info "Local http cache hit ${pkg_name}..."
+        wget "${local_addr}" -O "${pkg_name}"
+        if _checksum_check_pass "${pkg_name}" "${expected_cs}"; then
+            ok "Successfully downloaded ${pkg_name} from ${LOCAL_HTTP_ADDR}," \
+               "will use it."
+            return
+        else
+            warning "Found ${pkg_name} in local http cache, but checksum mismatch."
+            rm -f "${pkg_name}"
+            use_cache=0
+        fi
+    fi # end http cache check
+
+    if [[ -e "${ARCHIVE_DIR}/${pkg_name}" ]]; then
+        if _checksum_check_pass "${ARCHIVE_DIR}/${pkg_name}" "${expected_cs}"; then
+            info "package $pkg_name found in fscache, will use it."
+            use_cache=1
+        else
+            warning "package ${pkg_name} found in fscache, but checksum mismatch."
+        fi
+    fi
+
+    local my_schema
+    my_schema=$(package_schema "$url" "$pkg_name")
+
+    if [[ $use_cache -eq 0 ]]; then
+        if [[ "$my_schema" == "http" ]]; then
+            info "Start to download $pkg_name from ${url} ..."
+            wget "$url" -O "$pkg_name"
+            ok "Successfully downloaded $pkg_name"
+        elif [[ "$my_schema" == "git" ]]; then
+            info "Clone into git repo $url..."
+            git clone --recurse-submodules --single-branch "$url"
+            ok "Successfully cloned git repo: $url"
+        else
+            error "Unknown schema for package \"$pkg_name\", url=\"$url\""
+        fi
+    else
+        info "Congrats, fs cache hit ${pkg_name}, schema ${my_schema}, will use it."
+        if [ "$my_schema" = "http" ]; then
+            # ln -s "$ARCHIVE_DIR/${pkg_name}" "$pkg_name"
+            mv -f "${ARCHIVE_DIR}/${pkg_name}" "${pkg_name}"
+        elif [ "$my_schema" = "git" ]; then
+            tar xzf "$ARCHIVE_DIR/${pkg_name}"
+        else
+            error "Unknown schema for package \"$pkg_name\", url=\"$url\""
+        fi
+    fi
+}

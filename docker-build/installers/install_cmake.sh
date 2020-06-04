@@ -35,7 +35,8 @@ if [[ "${TARGET_ARCH}" == "x86_64" ]]; then
     mkdir -p /opt/cmake
     ./${CMAKE_SH} --skip-license --prefix="${SYSROOT_DIR}"
     rm -fr ${CMAKE_SH}
-elif [[ "${ARCH}" == "aarch64" ]]; then
+
+elif [[ "${TARGET_ARCH}" == "aarch64" ]]; then
     apt-get -y update && \
         apt-get -y install \
         libssl-dev \
@@ -43,7 +44,7 @@ elif [[ "${ARCH}" == "aarch64" ]]; then
 
     PKG_NAME="CMake-${VERSION}.tar.gz"
     CHECKSUM="08b048117aa8966d477091680f1a5c67bf8ffb893a1c94ff62858cbb2358a07c"
-    DOWNLOAD_LINK=https://github.com/Kitware/CMake/archive/v3.16.8.tar.gz
+    DOWNLOAD_LINK="https://github.com/Kitware/CMake/archive/v3.16.8.tar.gz"
     download_if_not_cached "${PKG_NAME}" "${CHECKSUM}" "${DOWNLOAD_LINK}"
     tar xzf ${PKG_NAME}
 

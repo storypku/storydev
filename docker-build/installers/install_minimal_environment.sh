@@ -1,5 +1,4 @@
-#! /bin/sh
-# shellcheck shell=sh
+#! /usr/bin/env bash
 ###############################################################################
 # Copyright 2020 The Apollo Authors. All Rights Reserved.
 #
@@ -19,10 +18,7 @@
 # Fail on first error.
 set -e
 
-MY_GEO=$1
-
-# Uncomment iff using POSIX shell no longer fails
-# shift
+MY_GEO=$1; shift
 
 ARCH="$(uname -m)"
 

@@ -16,42 +16,49 @@
 # limitations under the License.
 ###############################################################################
 
-# Usage: dev_into.sh [TARGET [ARCH]]
-#  E.g., dev_into.sh dev x86_64 # default
-#        dev_into.sh cyber aarch64
-#        dev_into.sh cyber  # cyber.x86_64
-TARGET="dev"
-ARCH="x86_64"
+DOCKER_USER="${USER}"
+DEV_CONTAINER="story_dev_${USER}"
 
-STORY_CONTAINER=
+TOP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${TOP_DIR}/scripts/apollo.bashrc"
 
-function parse_arguments() {
-    if [[ $# -eq 1 ]]; then
-        TARGET="$1"
-    elif [[ $# -ge 2 ]]; then
-        TARGET="$1"
-        ARCH="$2"
-    fi
-    STORY_CONTAINER="story_${TARGET}_${ARCH}"
-}
+xhost +local:root 1>/dev/null 2>&1
 
-function dev_into_container() {
-    xhost +local:root 1>/dev/null 2>&1
+HOST_ARCH="$(uname -m)"
+TARGET_ARCH="$(docker exec "${DEV_CONTAINER}" uname -m)"
 
-    USER_ID=$(id -u)
+IFS='' read -r -d '' NONROOT_SUDO_ERRMSG << EOF
+"sudo: effective uid is not 0, is /usr/bin/sudo on a file system with the \
+'nosuid' option set or an NFS file system without root privileges?"
+EOF
 
+if [[ "${HOST_ARCH}" != "${TARGET_ARCH}" ]]; then
+    warning "We only tested aarch containers running on x86_64 hosts." \
+            "And after we changed from ROOT to NON-ROOT users, executing" \
+            "sudo operations complains:\n  " \
+            "${NONROOT_SUDO_ERRMSG}"
+fi
+
+if [ "${TARGET_ARCH}" == "x86_64" ]; then
     docker exec \
-        -u $USER \
-        -e HISTFILE=/apollo/.dev_bash_hist \
-        -it ${STORY_CONTAINER} \
+        -u "${DOCKER_USER}" \
+        -it "${DEV_CONTAINER}" \
         /bin/bash
+elif [ "${TARGET_ARCH}" == "aarch64" ]; then
+    info "For the first time after CyberRT container starts, you can running" \
+         "the following two commands to su to a non-root user:"
+    info "1) /apollo/scripts/docker_start_user.sh"
+    info "2) su - ${DOCKER_USER}"
 
-    xhost -local:root 1>/dev/null 2>&1
-}
+    # warning "! To exit, please use 'ctrl+p ctrl+q' !"
+    # docker attach "${DEV_CONTAINER}"
+    docker exec \
+        -u root \
+        -it "${DEV_CONTAINER}" \
+        /bin/bash
+else
+    error "Unsupported architecture: ${TARGET_ARCH}"
+    exit 1
+fi
 
-function main() {
-    parse_arguments "$@"
-    dev_into_container
-}
-
-main "$@"
+xhost -local:root 1>/dev/null 2>&1
