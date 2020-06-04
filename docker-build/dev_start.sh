@@ -461,7 +461,7 @@ function main() {
 
     ok "Congrats, you have successfully finished setting up Apollo dev docker environment." \
        "To login into dev container, please run the following command:"
-    ok "  bash dev_into.sh"
+    ok "  ./dev_into.sh"
     ok "Enjoy!"
 }
 

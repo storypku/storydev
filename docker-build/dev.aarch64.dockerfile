@@ -1,10 +1,10 @@
 FROM arm64v8/ubuntu:18.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV PATH /opt/apollo/sysroot/bin:$PATH
 ARG GEOLOC
 
 LABEL version="1.2"
-ENV PATH /opt/apollo/sysroot/bin:$PATH
 
 COPY installers /tmp/installers
 COPY rcfiles /opt/apollo/rcfiles

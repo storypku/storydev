@@ -105,6 +105,10 @@ function _checksum_check_pass() {
     fi
 }
 
+function pip3_install() {
+    python3 -m pip install --no-cache-dir $@
+}
+
 # sha256sum was provided by coreutils
 function download_if_not_cached {
     local pkg_name=$1
