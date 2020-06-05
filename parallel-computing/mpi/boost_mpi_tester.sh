@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 }
 EOF
 
-set -x
+set -e
 
 SYSROOT_DIR=/opt/apollo/sysroot
 mpi_test_cpp="$(mktemp /tmp/hello.XXXXXX.cpp)"
@@ -22,4 +22,3 @@ ${SYSROOT_DIR}/bin/mpic++ "${mpi_test_cpp}" -o hello_mpi \
 
 ${SYSROOT_DIR}/bin/mpirun -np 2 ./hello_mpi
 rm -rf hello_mpi
-set +x
