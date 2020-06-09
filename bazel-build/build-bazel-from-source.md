@@ -77,7 +77,7 @@ Excerpt from [Official Bazel Link Above](https://docs.bazel.build/versions/maste
 
 ### Bootstrapping Bazel with Embedded JDK
 
-Not tested, don't know whether the following works as expected or not.
+Not tested, don't know whether the following works as expected.
 
 ```
 env EXTRA_BAZEL_ARGS="" bash ./compile.sh
