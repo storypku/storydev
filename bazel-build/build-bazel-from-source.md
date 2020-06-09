@@ -11,6 +11,7 @@ On Ubuntu 18.04
 
 ```
 sudo apt-get install build-essential openjdk-11-jdk python3 zip unzip
+sudo ln -s /usr/bin/python3 /usr/local/bin/python
 ```
 
 ## Download Bazel Sources
