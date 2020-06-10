@@ -78,25 +78,39 @@ Excerpt from [Official Bazel Link Above](https://docs.bazel.build/versions/maste
 
 ### Bootstrapping Bazel with Embedded JDK
 
-None
-
-### NOTE
-
-Tested on aarch64, even if we don't specify `--host_java_base` option
-in `EXTRA_BAZEL_ARGS` env, i.e,
+Modify `compile.sh` as follows:
 
 ```
-env EXTRA_BAZEL_ARGS="" bash ./compile.sh
+--- compile.sh.bak	2020-06-10 16:49:47.401787887 +0800
++++ compile.sh	2020-06-10 16:50:08.633539611 +0800
+@@ -63,12 +63,12 @@
+ log "Building output/bazel"
+ # We set host and target platform directly because we are building for the local
+ # host.
+-bazel_build "src:bazel_nojdk${EXE_EXT}" \
++bazel_build "src:bazel${EXE_EXT}" \
+   --action_env=PATH \
+   --host_platform=@local_config_platform//:host \
+   --platforms=@local_config_platform//:host \
+   || fail "Could not build Bazel"
+-bazel_bin_path="$(get_bazel_bin_path)/src/bazel_nojdk${EXE_EXT}"
++bazel_bin_path="$(get_bazel_bin_path)/src/bazel${EXE_EXT}"
+ [ -e "$bazel_bin_path" ] \
+   || fail "Could not find freshly built Bazel binary at '$bazel_bin_path'"
+ cp -f "$bazel_bin_path" "output/bazel${EXE_EXT}" \
 ```
 
-The generated `bazel` binary still depends on pre-installed Java, as
-can be seen from the following console log:
+Then execute:
 
 ```
-$ ./bazel
-FATAL: Could not find system javabase. Ensure JAVA_HOME is set, or javac is on your PATH.
-$ ./bazel --version
-bazel 3.2.0- (@non-git)
+env EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk" bash ./compile.sh
 ```
 
-It seems target of `compile.sh` was `//src:bazel_nojdk`.
+If you have a working bazel by now, you can also run
+
+```
+env BAZEL=/opt/apollo/sysroot/bin/bazel bash compile.sh
+```
+
+to build `Bazel with Embedded JDK`.
+
