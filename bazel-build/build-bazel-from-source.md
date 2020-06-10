@@ -78,9 +78,25 @@ Excerpt from [Official Bazel Link Above](https://docs.bazel.build/versions/maste
 
 ### Bootstrapping Bazel with Embedded JDK
 
-Not tested, don't know whether the following works as expected.
+None
+
+### NOTE
+
+Tested on aarch64, even if we don't specify `--host_java_base` option
+in `EXTRA_BAZEL_ARGS` env, i.e,
 
 ```
 env EXTRA_BAZEL_ARGS="" bash ./compile.sh
 ```
 
+The generated `bazel` binary still depends on pre-installed Java, as
+can be seen from the following console log:
+
+```
+$ ./bazel
+FATAL: Could not find system javabase. Ensure JAVA_HOME is set, or javac is on your PATH.
+$ ./bazel --version
+bazel 3.2.0- (@non-git)
+```
+
+It seems target of `compile.sh` was `//src:bazel_nojdk`.
