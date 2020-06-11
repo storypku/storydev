@@ -7,5 +7,7 @@ Linux system with systemd enabled
 ## How to Run
 
 ```
-TODO
+bash setup_ssh_tunnel.sh
 ```
+
+
