@@ -3,10 +3,10 @@
 # Ubuntu-only                                                               #
 # Usage:                                                                    #
 # Step 1:                                                                   #
-#   bash setup_ssh_tunnel.sh                                              #
+#   bash setup_ssh_tunnel.sh                                                #
 # Step 2:                                                                   #
 #   ssh -p <remote-ssh-server-port> <username>@<ssh-server-addr>            #
-#       Eg. ssh -p 4522 story@storypku.com                                  #
+#       Eg. ssh -p 22 panda@myexample.com                                   #
 # Step 3: On ssh-server side                                                #
 #   ssh localhost -p <reverse-port>                                         #
 #       Eg. ssh localhost -p 19527                                          #
