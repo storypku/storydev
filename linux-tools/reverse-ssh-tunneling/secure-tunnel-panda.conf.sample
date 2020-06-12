@@ -1,8 +1,0 @@
-# /etc/default/secure-tunnel@panda
-TARGET=180.76.51.142
-LOCAL_ADDR=0.0.0.0
-REVERSE_PORT=20001
-REMOTE_USER=panda
-REMOTE_PORT=22
-LOCAL_PORT=22
-KEY_FILE=/home/nvidia/.ssh/id_rsa

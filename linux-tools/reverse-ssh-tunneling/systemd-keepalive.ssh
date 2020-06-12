@@ -1,9 +1,0 @@
-#! /usr/bin/env bash
-
-# sudo cp secure-tunnel-service.sample /etc/systemd/system/secure-tunnel@.service
-# sudo cp secure-tunnel-panda.conf.sample /etc/default/secure-tunnel@panda
-
-sudo systemctl daemon-reload
-sudo systemctl enable secure-tunnel@panda.service
-sudo systemctl start secure-tunnel@panda.service
-sudo systemctl status secure-tunnel@panda.service

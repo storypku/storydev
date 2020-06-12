@@ -11,21 +11,34 @@
 #   ssh localhost -p <reverse-port>                                         #
 #       Eg. ssh localhost -p 19527                                          #
 #***************************************************************************#
-set -o errexit
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
 : ${SERVER_ADDR:="example.com"}
+: ${SERVER_TAG:="${SERVER_ADDR%%.*}"}
 : ${SERVER_PORT:=22}
-: ${SERVER_USER:="story"}
-: ${SERVER_PASS:="Secret"}
+: ${SERVER_USER:="your_server_username"}
+: ${SERVER_PASS:="your_server_password"}
 
-: ${REVERSE_PORT:=19527}
+: ${REVERSE_PORT:=9527}
 : ${LOCAL_PORT:=22}
+
+IFS='' read -r -d '' SECURE_TUNNEL_CONFIG_TEXT << EOF
+TARGET=${SERVER_ADDR}
+LOCAL_ADDR=0.0.0.0
+REVERSE_PORT=${REVERSE_PORT}
+REMOTE_USER=${SERVER_USER}
+REMOTE_PORT=${SERVER_PORT}
+LOCAL_PORT=${LOCAL_PORT}
+KEY_FILE=$HOME/.ssh/id_rsa
+EOF
 
 SERVER_SIDE_CONFIG="/etc/ssh/ssh_config"
 CLIENT_SIDE_CONFIG="/etc/ssh/sshd_config"
 
 PRIV_AUTH="$HOME/.ssh/id_rsa"
 PUB_AUTH="${PRIV_AUTH}.pub"
+
+set -o errexit
 
 function prereq_software_install() {
     if [ ! dpkg -s openssh-server &>/dev/null ] \
@@ -62,14 +75,29 @@ function sshd_client_config() {
     echo "ClientAliveCountMax 4"  | sudo tee -a "${CLIENT_SIDE_CONFIG}"
 }
 
-function final_usage_hint() {
+function test_usage_hint() {
     local REV_CMD="ssh -i ${PRIV_AUTH} -p ${SERVER_PORT} \
 -N -R ${REVERSE_PORT}:localhost:${LOCAL_PORT} \
 ${SERVER_USER}@${SERVER_ADDR}"
     echo "#******************************************************************#"
-    echo "# Please run the following command to start ssh-reverse-tunnel:    "
+    echo "# You can run the following command to test ssh-reverse-tunnel:     "
     echo "#     ${REV_CMD} "
     echo "#*******************************************************************#"
+}
+
+function systemd_config_install() {
+    local systemd_config_path="/etc/default/secure-tunnel@${SERVER_TAG}"
+    echo "$SECURE_TUNNEL_CONFIG_TEXT" | sudo tee "${systemd_config_path}"
+    sudo cp -f ${CURRENT_DIR}/secure-tunnel-service.sample /etc/systemd/system/secure-tunnel@.service
+}
+
+function start_systemd_keepalive() {
+    local service_name="secure-tunnel@${SERVER_TAG}.service"
+    sudo systemctl daemon-reload
+    # Start secure-tunnel on boot
+    sudo systemctl enable "${service_name}"
+    sudo systemctl start "${service_name}"
+    sudo systemctl status "${service_name}"
 }
 
 function main() {
@@ -81,7 +109,10 @@ function main() {
     ssh_server_config
     echo "Make sure ${CLIENT_SIDE_CONFIG} adjusted ..."
     sshd_client_config
-    final_usage_hint
+    test_usage_hint
+    systemd_config_install
+    start_systemd_keepalive
+    echo "Done secure-tunnel-setup-and-keepalive-using-systemd-on-boot!"
 }
 
 main "$@"
