@@ -4,7 +4,7 @@
 
 This is a directory for useful linux shell commands and settings.
 
-## PATH Setting
+## PATH Settings
 
 - /etc/profile.d/apps-bin-path.sh
 
@@ -48,3 +48,14 @@ install -m 0755 ./bazel_opt_aarch64 -D ${DEST}/bin/bazel
 install -m 0755 -D bin/* -t "$DEST/bin"
 install -m 0644 -D ./share/aclocal/* -t "${DEST}/share/aclocal"
 ```
+
+## The `expect` command
+On Ubuntu,
+
+```
+sudo apt-get -y update
+sudo apt-get -y install expect
+```
+
+Ref: https://stackoverflow.com/questions/41165719/embedding-an-expect-inside-a-bash-script
+

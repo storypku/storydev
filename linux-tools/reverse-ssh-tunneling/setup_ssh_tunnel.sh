@@ -41,19 +41,28 @@ PUB_AUTH="${PRIV_AUTH}.pub"
 set -o errexit
 
 function prereq_software_install() {
-    if [ ! dpkg -s openssh-server &>/dev/null ] \
-       [ ! dpkg -s openssh-client &>/dev/null ]; then
+    if ! dpkg -s openssh-server &>/dev/null \
+       ! dpkg -s openssh-client &>/dev/null ; then
         sudo apt-get -y update && \
         sudo apt-get -y install openssh-server openssh-client
     fi
 }
 
+IFS='' read -r -d '' EXPECT_SCRIPT_TEXT << EOF
+spawn ssh-copy-id -i ${PUB_AUTH} -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_ADDR}
+expect "password"
+send "${SERVER_PASS}\r"
+interact
+EOF
+
 function ssh_keygen_install() {
     if [[ ! -f "${PUB_AUTH}" || ! -f "${PRIV_AUTH}" ]]; then
         ssh-keygen -t rsa -b 2048 -N "" -f "${PRIV_AUTH}" -q
     fi
-    # TODO: expect
-    ssh-copy-id -i "${PUB_AUTH}" -p "${SERVER_PORT}" "${SERVER_USER}@${SERVER_ADDR}"
+    # ssh-copy-id -i "${PUB_AUTH}" -p "${SERVER_PORT}" "${SERVER_USER}@${SERVER_ADDR}"
+    # Ref: https://stackoverflow.com/questions/41165719/embedding-an-expect-inside-a-bash-script
+    expect -c "${EXPECT_SCRIPT_TEXT//
+/;}"
 }
 
 function ssh_server_config() {
@@ -88,7 +97,7 @@ ${SERVER_USER}@${SERVER_ADDR}"
 function systemd_config_install() {
     local systemd_config_path="/etc/default/secure-tunnel@${SERVER_TAG}"
     echo "$SECURE_TUNNEL_CONFIG_TEXT" | sudo tee "${systemd_config_path}"
-    sudo cp -f ${CURRENT_DIR}/secure-tunnel-service.sample /etc/systemd/system/secure-tunnel@.service
+    sudo cp -f "${CURRENT_DIR}/secure-tunnel-service.sample" /etc/systemd/system/secure-tunnel@.service
 }
 
 function start_systemd_keepalive() {
