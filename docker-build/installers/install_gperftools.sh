@@ -30,6 +30,8 @@ apt-get -y update && \
 
 VALGRIND_FLAGS="$(pkg-config --cflags valgrind)"
 
+# Ref: https://build.opensuse.org/package/view_file/openSUSE:Factory/gperftools/gperftools.spec
+
 VERSION="2.7"
 PKG_NAME="gperftools-${VERSION}.tar.gz"
 DOWNLOAD_LINK="https://github.com/gperftools/gperftools/releases/download/gperftools-${VERSION}/${PKG_NAME}"
