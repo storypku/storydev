@@ -1,0 +1,10 @@
+startup --batch_cpu_scheduling
+startup --host_jvm_args="-XX:-UseParallelGC"
+
+build --spawn_strategy=standalone
+build --announce_rc
+build --show_timestamps
+
+build --host_cxxopt="-std=c++14"
+build --cxxopt="-std=c++14"
+build --cxxopt="-fdiagnostics-color=always"
