@@ -1,0 +1,7 @@
+workspace(name = "vtk_demo")
+
+new_local_repository(
+    name = "vtk",
+    build_file = "third_party/vtk.BUILD",
+    path = "/usr/include/vtk-7.1",
+)

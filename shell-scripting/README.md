@@ -59,3 +59,5 @@ sudo apt-get -y install expect
 
 Ref: https://stackoverflow.com/questions/41165719/embedding-an-expect-inside-a-bash-script
 
+## On 'find'
+- https://stackoverflow.com/questions/4210042/how-to-exclude-a-directory-in-find-command
