@@ -1,0 +1,5 @@
+workspace(name = "vtk_demo")
+
+load("//third_party/vtk:workspace.bzl", vtk = "repo")
+
+vtk()
