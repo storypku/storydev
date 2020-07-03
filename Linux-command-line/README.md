@@ -1,4 +1,4 @@
-# Linux Shell
+# Linux Command Line
 
 ## Intro
 
