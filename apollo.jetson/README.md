@@ -14,3 +14,7 @@ https://ngc.nvidia.com/catalog/containers/nvidia:l4t-base
 ```
 docker pull nvcr.io/nvidia/l4t-base:r32.4.2
 ```
+
+### Docker on TX2
+
+https://gist.github.com/JasonAtNvidia/e03e6675849d1d4049b85ea41efb2171
