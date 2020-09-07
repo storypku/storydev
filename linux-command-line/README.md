@@ -61,3 +61,8 @@ Ref: https://stackoverflow.com/questions/41165719/embedding-an-expect-inside-a-b
 
 ## On 'find'
 - https://stackoverflow.com/questions/4210042/how-to-exclude-a-directory-in-find-command
+
+```
+find . -path ./.cache -prune -false -o -name images -type d
+```
+
