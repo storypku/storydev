@@ -66,3 +66,15 @@ Ref: https://stackoverflow.com/questions/41165719/embedding-an-expect-inside-a-b
 find . -path ./.cache -prune -false -o -name images -type d
 ```
 
+## Kill
+
+```
+sudo fuser -k 8888/tcp
+```
+
+## GDB
+
+```
+gdb --args path/to/my_prog arg1 arg2
+```
+```
