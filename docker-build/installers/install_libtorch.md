@@ -25,6 +25,12 @@ sudo -H pip3 install mkl mkl-devel
 Note:
 > Don't apt install pybind11-dev !
 
+### Workaround for TsingHua Pypi Mirror Read Timeout
+```bash
+python3 -m pip config set global.index-url http://mirrors.aliyun.com/pypi/simple
+pip3_install --trusted-host mirrors.aliyun.com mkl==2021.1.1
+```
+
 ## Clone PyTorch Repo
 
 ```
