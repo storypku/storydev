@@ -1,0 +1,45 @@
+diff --git a/aten/src/ATen/cuda/CUDAContext.cpp b/aten/src/ATen/cuda/CUDAContext.cpp
+index fd51cc45e7..e3be2fd3bc 100644
+--- a/aten/src/ATen/cuda/CUDAContext.cpp
++++ b/aten/src/ATen/cuda/CUDAContext.cpp
+@@ -24,6 +24,8 @@ void initCUDAContextVectors() {
+ void initDeviceProperty(DeviceIndex device_index) {
+   cudaDeviceProp device_prop;
+   AT_CUDA_CHECK(cudaGetDeviceProperties(&device_prop, device_index));
++  // patch for "too many resources requested for launch"
++  device_prop.maxThreadsPerBlock = device_prop.maxThreadsPerBlock / 2;
+   device_properties[device_index] = device_prop;
+ }
+ 
+diff --git a/aten/src/ATen/cuda/detail/KernelUtils.h b/aten/src/ATen/cuda/detail/KernelUtils.h
+index af788ff8f8..fb27ab808c 100644
+--- a/aten/src/ATen/cuda/detail/KernelUtils.h
++++ b/aten/src/ATen/cuda/detail/KernelUtils.h
+@@ -19,7 +19,10 @@ namespace at { namespace cuda { namespace detail {
+   for (int i=_i_n_d_e_x; _i_n_d_e_x < (n); _i_n_d_e_x+=blockDim.x * gridDim.x, i=_i_n_d_e_x)
+ 
+ // Use 1024 threads per block, which requires cuda sm_2x or above
+-constexpr int CUDA_NUM_THREADS = 1024;
++//constexpr int CUDA_NUM_THREADS = 1024;
++
++// patch for "too many resources requested for launch"
++constexpr int CUDA_NUM_THREADS = 512;
+ 
+ // CUDA: number of blocks for threads.
+ inline int GET_BLOCKS(const int N)
+diff --git a/aten/src/THCUNN/common.h b/aten/src/THCUNN/common.h
+index 61cd90cdd6..c50c5506ca 100644
+--- a/aten/src/THCUNN/common.h
++++ b/aten/src/THCUNN/common.h
+@@ -5,7 +5,10 @@
+   "Some of weight/gradient/input tensors are located on different GPUs. Please move them to a single one.")
+ 
+ // Use 1024 threads per block, which requires cuda sm_2x or above
+-const int CUDA_NUM_THREADS = 1024;
++//constexpr int CUDA_NUM_THREADS = 1024;
++
++// patch for "too many resources requested for launch"
++constexpr int CUDA_NUM_THREADS = 512;
+ 
+ // CUDA: number of blocks for threads.
+ inline int GET_BLOCKS(const int N)
