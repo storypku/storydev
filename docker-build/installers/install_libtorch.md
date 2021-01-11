@@ -1,9 +1,8 @@
 # How to Install LibTorch from Source on Ubuntu 18.04
 
+## Pre-Requisites
 
-## Pre-Requisite
-
-### Step 1: APT
+### Step 1: Install pre-requisite packages
 
 ```bash
 sudo apt-get update && sudo apt-get -y install --no-install-recommends \
@@ -15,10 +14,15 @@ sudo apt-get update && sudo apt-get -y install --no-install-recommends \
   libmpfr-dev \
   libjpeg-dev \
   libpng-dev \
+  libssl-dev \
   gfortran
 
 sudo -H pip3 install scikit-build ninja
+```
 
+### Step 2: Install mkl for `x86_64`
+
+```
 # x86_64 only
 sudo -H pip3 install mkl mkl-devel
 ```
@@ -26,14 +30,14 @@ sudo -H pip3 install mkl mkl-devel
 Note:
 > Don't apt install pybind11-dev !
 
-### Workaround for TsingHua Pypi Mirror Read Timeout
+#### Workaround for TsingHua Pypi Mirror Read Timeout
 
 ```bash
 python3 -m pip config set global.index-url http://mirrors.aliyun.com/pypi/simple
 pip3_install --trusted-host mirrors.aliyun.com mkl==2021.1.1
 ```
 
-### Alternative Option for MKL Library Installation
+#### Alternative Option for MKL Library Installation
 https://software.intel.com/content/www/us/en/develop/articles/installing-intel-oneapi-toolkits-via-apt.html
 
 ```
@@ -225,6 +229,8 @@ tar czvf libtorch_cpu-1.7.0-linux-x86_64.tar.gz libtorch_cpu-1.7.0-linux-x86_64
 
 ## LibTorch: GPU Build
 
+### Install Magma First
+
 ```
 rm -rf /apollo/pytorch.git/build
 
@@ -237,7 +243,7 @@ export PYTORCH_BUILD_NUMBER=1
 export BLAS="MKL" # OpenBLAS for ARM64
 
 # For CUDA 10.2 + PyTorch 1.6.0
-export TORCH_CUDA_ARCH_LIST="3.7 5.2 6.0 6.1 7.0 7.5"
+export TORCH_CUDA_ARCH_LIST="5.2 6.0 6.1 7.0 7.5"
 export TORCH_CUDA_ARCH_LIST="5.3 6.2 7.2"
 
 # For CUDA 11.1
