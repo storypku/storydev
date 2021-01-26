@@ -72,46 +72,29 @@ patch -p1 < path/to/pytorch-1.6-rc2-jetpack-4.4-GA.patch
 export USE_NCCL=0
 export USE_DISTRIBUTED=0
 
-## AArch64 ONLY START
-export USE_QNNPACK=0
-export USE_PYTORCH_QNNPACK=0
-## AArch64 ONLY END
+export USE_QNNPACK=0 # AArch64 ONLY
+export USE_PYTORCH_QNNPACK=0 # AArch64 ONLY
 
 ## 二者均为跟构建版本相关的环境变量
 export PYTORCH_BUILD_VERSION="1.7.0"
 export PYTORCH_BUILD_NUMBER=1
 
-## BUILD_CUSTOM_PROTOBUF=OFF:
-##  Use freshly installed protobuf already in CyberRT container
-##  Rather than the one from pytorch.git/third_party
+export BLAS="MKL" # OpenBLAS for ARM64
 
-BUILD_TORCH=ON \
-    USE_CUDA=0 \
-    BUILD_CUSTOM_PROTOBUF=OFF \
-    python3 setup.py build # or install
+## BUILD_CUSTOM_PROTOBUF=ON (default)
+##  DON'T use pre-installed protobuf in CyberRT container
+##  Build it from pytorch.git/third_party/protobuf to workaround linking issues
+##  in Apollo simulator.
+
+USE_CUDA=0 python3 setup.py build
 ```
 
 **Note**:
 
-**Terminal Output**
+You can add `set(CMAKE_VERBOSE_MAKEFILE ON)`
+in `CMakeLists.txt` to view more detailed build log.
 
-```bash
-cmake -GNinja -DBUILD_PYTHON=True -DBUILD_TEST=True -DBUILD_TORCH=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/apollo/pytorch.git/torch -DCMAKE_PREFIX_PATH=/usr/lib/python3/dist-packages -DNUMPY_INCLUDE_DIR=/usr/local/lib/python3.6/dist-packages/numpy/core/include -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/libpython3.6m.so.1.0 -DTORCH_BUILD_VERSION=1.7.0 -DUSE_CUDA=0 -DUSE_DISTRIBUTED=0 -DUSE_GPU_HOST=1 -DUSE_GPU_TARGET=1 -DUSE_NUMPY=True /apollo/pytorch.git
-```
-
-And Summary for x86_64
-
-```text
--- Building with NumPy bindings
--- Not using cuDNN
--- Not using CUDA
--- Using MKLDNN
--- Not using CBLAS in MKLDNN
--- Not using NCCL
--- Building without distributed package
-```
-
-Summary for AArch64 using `BUILD_TORCH=ON USE_CUDA=0 BUILD_CUSTOM_PROTOBUF=OFF python3 tools/build_libtorch.py`
+Summary for AArch64 using `USE_CUDA=0 python3 tools/build_libtorch.py`
 
 ```text
 -- ******** Summary ********
@@ -134,10 +117,6 @@ Summary for AArch64 using `BUILD_TORCH=ON USE_CUDA=0 BUILD_CUSTOM_PROTOBUF=OFF p
 --   BUILD_CAFFE2_MOBILE   : OFF
 --   USE_STATIC_DISPATCH   : OFF
 --   BUILD_BINARY          : OFF
---   BUILD_CUSTOM_PROTOBUF : OFF
---     Protobuf compiler   : 
---     Protobuf includes   : 
---     Protobuf libraries  : 
 --   BUILD_DOCS            : OFF
 --   BUILD_PYTHON          : False
 --   BUILD_CAFFE2_OPS      : ON
@@ -179,15 +158,11 @@ Summary for AArch64 using `BUILD_TORCH=ON USE_CUDA=0 BUILD_CUSTOM_PROTOBUF=OFF p
 --   Public Dependencies  : Threads::Threads;/usr/lib/aarch64-linux-gnu/libopenblas.so
 --   Private Dependencies : pthreadpool;cpuinfo;nnpack;XNNPACK;/usr/lib/aarch64-linux-gnu/libnuma.so;fp16;aten_op_header_gen;foxi_loader;rt;fmt::fmt-header-only;gcc_s;gcc;dl
 CMake Warning:
-  Manually-specified variables were not used by the project:
-    BUILD_TORCH
-    NUMPY_INCLUDE_DIR
-    PYTHON_INCLUDE_DIR
     USE_GPU_HOST
     USE_GPU_TARGET
 ```
 
-Summary for AArch64 using `BUILD_TORCH=ON USE_CUDA=0 BUILD_CUSTOM_PROTOBUF=OFF python3 setup.py build`:
+Summary for AArch64 using `USE_CUDA=0 python3 setup.py build`:
 
 ```text
 @@ -24,7 +24,13 @@
@@ -254,48 +229,8 @@ export TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
 USE_CUDA=1 \
     USE_CUDNN=1 \
     USE_TENSORRT=1 \
-    BUILD_CUSTOM_PROTOBUF=OFF \
     python3 setup.py build
 ```
-
-Terminal Output
-
-```bash
-cmake -GNinja -DBLAS=MKL -DBUILD_CUSTOM_PROTOBUF=OFF -DBUILD_PYTHON=True -DBUILD_TEST=True -DBUILD_TORCH=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/apollo/pytorch.git/torch -DCMAKE_PREFIX_PATH=/usr/lib/python3/dist-packages -DNUMPY_INCLUDE_DIR=/usr/local/lib/python3.6/dist-packages/numpy/core/include -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m -DPYTHON_LIBRARY=/usr/lib/libpython3.6m.so.1.0 -DTORCH_BUILD_VERSION=1.7.0 -DUSE_CUDA=1 -DUSE_CUDNN=1 -DUSE_DISTRIBUTED=0 -DUSE_GPU_HOST=1 -DUSE_GPU_TARGET=1 -DUSE_NCCL=0 -DUSE_NUMPY=True -DUSE_TENSORRT=1 /apollo/pytorch.git
-```
-
-Summary for x86_64:
-
-```text
--- ******** Summary ********
---   CMake version         : 3.16.8
---   CMake command         : /opt/apollo/sysroot/bin/cmake
---   System                : Linux
---   C++ compiler          : /usr/bin/c++
---   C++ compiler version  : 7.5.0
---   CXX flags             :  -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DTENSORRT_VERSION_MAJOR=7 -DTENSORRT_VERSION_MINOR=2 -Wnon-virtual-dtor
---   Build type            : Release
---   Compile definitions   : TH_BLAS_MKL;ONNX_ML=1;ONNXIFI_ENABLE_EXT=1
---   CMAKE_PREFIX_PATH     : /usr/lib/python3/dist-packages;/usr/local/cuda
---   CMAKE_INSTALL_PREFIX  : /apollo/pytorch.git/torch
---   CMAKE_MODULE_PATH     : /apollo/pytorch.git/cmake/Modules;/apollo/pytorch.git/cmake/public/../Modules_CUDA_fix
---
---   ONNX version          : 1.7.0
---   ONNX NAMESPACE        : onnx_torch
---   ONNX_BUILD_TESTS      : OFF
---   ONNX_BUILD_BENCHMARKS : OFF
---   ONNX_USE_LITE_PROTO   : OFF
---   ONNXIFI_DUMMY_BACKEND : OFF
---   ONNXIFI_ENABLE_EXT    : OFF
---
---   Protobuf compiler     :
---   Protobuf includes     :
---   Protobuf libraries    :
---   BUILD_ONNX_PYTHON     : OFF
-```
-
-Summary for AArch64:
-
 
 ### Package
 
