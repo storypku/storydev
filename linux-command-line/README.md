@@ -74,7 +74,15 @@ sudo fuser -k 8888/tcp
 
 ## GDB
 
-```
+```bash
 gdb --args path/to/my_prog arg1 arg2
 ```
+
+## NMap
+
+Ref https://www.networkstraining.com/nmap-scan-ip-range
+
+```bash
+nmap 192.168.1.0/24
 ```
+
