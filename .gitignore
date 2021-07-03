@@ -32,3 +32,4 @@
 *.app
 
 docker.build/archive/
+bazel-*
