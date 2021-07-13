@@ -1,0 +1,16 @@
+workspace(name = "beast-demo")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+rules_boost_version = "f734190672a17c0efcd0882d450dea2d6457e9fa"
+
+http_archive(
+    name = "com_github_nelhage_rules_boost",
+    sha256 = "6c7a419d25f7ea71d9fd551979e9b5aa431f966bb96985a2e29f0d8fa49b1042",
+    strip_prefix = "rules_boost-{}".format(rules_boost_version),
+    urls = ["https://github.com/nelhage/rules_boost/archive/{}.tar.gz".format(rules_boost_version)],
+)
+
+load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
+
+boost_deps()
