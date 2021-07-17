@@ -1,0 +1,9 @@
+test --test_verbose_timeout_warnings
+
+test:lint --test_tag_filters=cpplint
+test:lint --build_tests_only
+test:nolint --test_tag_filters=-cpplint
+
+# There is little point in benchmark-only build
+run:bm --build_tag_filters=benchmark
+
