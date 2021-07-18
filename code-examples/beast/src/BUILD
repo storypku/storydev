@@ -17,3 +17,11 @@ cc_binary(
         "@boost//:beast",
     ],
 )
+
+cc_binary(
+    name = "http_async_client",
+    srcs = ["http_async_client.cc"],
+    deps = [
+        "@boost//:beast",
+    ],
+)
