@@ -60,3 +60,11 @@ cc_binary(
         "@boost//:beast",
     ],
 )
+
+cc_binary(
+    name = "websocket_sync_server",
+    srcs = ["websocket_sync_server.cc"],
+    deps = [
+        "@boost//:beast",
+    ],
+)
