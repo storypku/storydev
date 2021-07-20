@@ -33,3 +33,11 @@ cc_binary(
         "@boost//:beast",
     ],
 )
+
+cc_binary(
+    name = "http_sync_server",
+    srcs = ["http_sync_server.cc"],
+    deps = [
+        "@boost//:beast",
+    ],
+)
