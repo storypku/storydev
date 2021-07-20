@@ -41,3 +41,22 @@ cc_binary(
         "@boost//:beast",
     ],
 )
+
+cc_binary(
+    name = "http_async_server",
+    srcs = ["http_async_server.cc"],
+    deps = [
+        "@boost//:beast",
+    ],
+)
+
+cc_binary(
+    name = "http_fast_server",
+    srcs = [
+        "fields_alloc.hpp",
+        "http_fast_server.cc",
+    ],
+    deps = [
+        "@boost//:beast",
+    ],
+)

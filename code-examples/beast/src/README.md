@@ -14,3 +14,6 @@ https://www.boost.org/doc/libs/1_76_0/libs/beast/example/http/server/sync/http_s
 
 ## Http Async Server
 https://www.boost.org/doc/libs/1_76_0/libs/beast/example/http/server/async/http_server_async.cpp
+
+## Http Fast Server
+https://www.boost.org/doc/libs/1_76_0/libs/beast/example/http/server/fast/http_server_fast.cpp
