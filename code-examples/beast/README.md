@@ -20,3 +20,9 @@ https://www.boost.org/doc/libs/1_76_0/libs/beast/example/http/server/fast/http_s
 
 ## Websocket Sync Server
 https://www.boost.org/doc/libs/1_76_0/libs/beast/example/websocket/server/sync/websocket_server_sync.cpp
+
+## Websocket Async Server
+https://www.boost.org/doc/libs/1_76_0/libs/beast/example/websocket/server/async/websocket_server_async.cpp
+
+## Websocket Fast Server
+https://www.boost.org/doc/libs/1_76_0/libs/beast/example/websocket/server/fast/websocket_server_fast.cpp
