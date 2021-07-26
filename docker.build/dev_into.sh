@@ -22,7 +22,7 @@ DEV_CONTAINER="story_dev_${USER}"
 TOP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${TOP_DIR}/scripts/apollo.bashrc"
 
-xhost +local:root 1>/dev/null 2>&1
+xhost +local:root 1> /dev/null 2>&1
 
 HOST_ARCH="$(uname -m)"
 TARGET_ARCH="$(docker exec "${DEV_CONTAINER}" uname -m)"
@@ -33,32 +33,32 @@ IFS='' read -r -d '' NONROOT_SUDO_ERRMSG << EOF
 EOF
 
 if [[ "${HOST_ARCH}" != "${TARGET_ARCH}" ]]; then
-    warning "We only tested aarch containers running on x86_64 hosts." \
-            "And after we changed from ROOT to NON-ROOT users, executing" \
-            "sudo operations complains:\n  " \
-            "${NONROOT_SUDO_ERRMSG}"
+  warning "We only tested aarch containers running on x86_64 hosts." \
+    "And after we changed from ROOT to NON-ROOT users, executing" \
+    "sudo operations complains:\n  " \
+    "${NONROOT_SUDO_ERRMSG}"
 fi
 
 if [ "${TARGET_ARCH}" == "x86_64" ]; then
-    docker exec \
-        -u "${DOCKER_USER}" \
-        -it "${DEV_CONTAINER}" \
-        /bin/bash
+  docker exec \
+    -u "${DOCKER_USER}" \
+    -it "${DEV_CONTAINER}" \
+    /bin/bash
 elif [ "${TARGET_ARCH}" == "aarch64" ]; then
-    info "For the first time after CyberRT container starts, you can running" \
-         "the following two commands to su to a non-root user:"
-    info "1) /apollo/scripts/docker_start_user.sh"
-    info "2) su - ${DOCKER_USER}"
+  info "For the first time after CyberRT container starts, you can running" \
+    "the following two commands to su to a non-root user:"
+  info "1) /apollo/scripts/docker_start_user.sh"
+  info "2) su - ${DOCKER_USER}"
 
-    # warning "! To exit, please use 'ctrl+p ctrl+q' !"
-    # docker attach "${DEV_CONTAINER}"
-    docker exec \
-        -u root \
-        -it "${DEV_CONTAINER}" \
-        /bin/bash
+  # warning "! To exit, please use 'ctrl+p ctrl+q' !"
+  # docker attach "${DEV_CONTAINER}"
+  docker exec \
+    -u root \
+    -it "${DEV_CONTAINER}" \
+    /bin/bash
 else
-    error "Unsupported architecture: ${TARGET_ARCH}"
-    exit 1
+  error "Unsupported architecture: ${TARGET_ARCH}"
+  exit 1
 fi
 
-xhost -local:root 1>/dev/null 2>&1
+xhost -local:root 1> /dev/null 2>&1

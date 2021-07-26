@@ -18,7 +18,8 @@
 # Fail on first error.
 set -e
 
-MY_GEO=$1; shift
+MY_GEO=$1
+shift
 
 ARCH="$(uname -m)"
 
@@ -27,24 +28,24 @@ ARCH="$(uname -m)"
 ##----------------------------##
 RCFILES_DIR=/opt/apollo/rcfiles
 if [ "${ARCH}" = "x86_64" ]; then
-    if [ "${MY_GEO}" = "cn" ]; then
-        cp -f "${RCFILES_DIR}/sources.list.cn.x86_64" /etc/apt/sources.list
-        # sed -i 's/nvidia.com/nvidia.cn/g' /etc/apt/sources.list.d/nvidia-ml.list
-    else
-        sed -i 's/archive.ubuntu.com/us.archive.ubuntu.com/g' /etc/apt/sources.list
-    fi
+  if [ "${MY_GEO}" = "cn" ]; then
+    cp -f "${RCFILES_DIR}/sources.list.cn.x86_64" /etc/apt/sources.list
+    # sed -i 's/nvidia.com/nvidia.cn/g' /etc/apt/sources.list.d/nvidia-ml.list
+  else
+    sed -i 's/archive.ubuntu.com/us.archive.ubuntu.com/g' /etc/apt/sources.list
+  fi
 else # aarch64
-    if [ "${MY_GEO}" = "cn" ]; then
-        cp -f "${RCFILES_DIR}/sources.list.cn.aarch64" /etc/apt/sources.list
-    fi
+  if [ "${MY_GEO}" = "cn" ]; then
+    cp -f "${RCFILES_DIR}/sources.list.cn.aarch64" /etc/apt/sources.list
+  fi
 fi
 
-apt-get -y update && \
-    apt-get install -y --no-install-recommends \
+apt-get -y update \
+  && apt-get install -y --no-install-recommends \
     apt-utils
 
-apt-get -y update && \
-    apt-get -y install -y --no-install-recommends \
+apt-get -y update \
+  && apt-get -y install -y --no-install-recommends \
     build-essential \
     autotools-dev \
     apt-file \
@@ -83,16 +84,16 @@ sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g'
 ##----------------##
 
 if [ "${MY_GEO}" = "cn" ]; then
-    if [ "${ARCH}" = "x86_64" ]; then
-        # Mirror from Tsinghua Univ.
-        PYPI_MIRROR="https://pypi.tuna.tsinghua.edu.cn/simple"
-        python3 -m pip install --no-cache-dir -i "$PYPI_MIRROR" pip -U
-        python3 -m pip config set global.index-url "$PYPI_MIRROR"
-    else
-        python3 -m pip install --no-cache-dir pip -U
-    fi
-else
+  if [ "${ARCH}" = "x86_64" ]; then
+    # Mirror from Tsinghua Univ.
+    PYPI_MIRROR="https://pypi.tuna.tsinghua.edu.cn/simple"
+    python3 -m pip install --no-cache-dir -i "$PYPI_MIRROR" pip -U
+    python3 -m pip config set global.index-url "$PYPI_MIRROR"
+  else
     python3 -m pip install --no-cache-dir pip -U
+  fi
+else
+  python3 -m pip install --no-cache-dir pip -U
 fi
 
 python3 -m pip install --no-cache-dir setuptools

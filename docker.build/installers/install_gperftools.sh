@@ -23,8 +23,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 . /tmp/installers/installer_base.sh
 
-apt-get -y update && \
-    apt-get -y install \
+apt-get -y update \
+  && apt-get -y install \
     valgrind \
     libunwind-dev
 
@@ -43,19 +43,19 @@ tar xzf ${PKG_NAME}
 
 pushd gperftools-${VERSION}
 
-    export CXXFLAGS="${VALGRIND_FLAGS} -O2 -DNDEBUG -fno-strict-aliasing"
-    ./configure \
-        --prefix=${SYSROOT_DIR} \
-        --enable-shared \
-        --enable-static=no \
-        --with-gnu-ld \
-        --with-pic \
-        --enable-libunwind \
-        --enable-frame-pointers \
-        --disable-debugalloc
+export CXXFLAGS="${VALGRIND_FLAGS} -O2 -DNDEBUG -fno-strict-aliasing"
+./configure \
+  --prefix=${SYSROOT_DIR} \
+  --enable-shared \
+  --enable-static=no \
+  --with-gnu-ld \
+  --with-pic \
+  --enable-libunwind \
+  --enable-frame-pointers \
+  --disable-debugalloc
 
-    make -j$(nproc)
-    make install
+make -j$(nproc)
+make install
 popd
 
 # clean up

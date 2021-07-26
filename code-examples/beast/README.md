@@ -26,3 +26,6 @@ https://www.boost.org/doc/libs/1_76_0/libs/beast/example/websocket/server/async/
 
 ## Websocket Fast Server
 https://www.boost.org/doc/libs/1_76_0/libs/beast/example/websocket/server/fast/websocket_server_fast.cpp
+
+## Advanced Server
+https://www.boost.org/doc/libs/1_76_0/libs/beast/example/advanced/server/advanced_server.cpp

@@ -21,4 +21,3 @@ set -e
 
 [ -d /tmp/archive ] && rm -rf /tmp/archive
 [ -d /tmp/installers ] && rm -rf /tmp/installers
-

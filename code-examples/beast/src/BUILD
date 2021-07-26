@@ -76,3 +76,31 @@ cc_binary(
         "@boost//:beast",
     ],
 )
+
+cc_binary(
+    name = "websocket_fast_server",
+    srcs = ["websocket_fast_server.cc"],
+    deps = [
+        "@boost//:beast",
+        "@boost//:coroutine",
+    ],
+)
+
+cc_binary(
+    name = "advanced_server",
+    srcs = ["advanced_server.cc"],
+    deps = [
+        ":http_util",
+        "@boost//:beast",
+    ],
+)
+
+cc_library(
+    name = "http_util",
+    srcs = ["http_util.cc"],
+    hdrs = ["http_util.h"],
+    deps = [
+        "//onboard/utils:file_util",
+        "@boost//:beast",
+    ],
+)

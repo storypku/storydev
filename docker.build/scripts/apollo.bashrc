@@ -16,7 +16,7 @@
 # limitations under the License.
 ###############################################################################
 
-APOLLO_ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd -P)"
+APOLLO_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 export APOLLO_ROOT_DIR
 
 BOLD='\033[1m'
@@ -27,19 +27,19 @@ YELLOW='\033[33m'
 NO_COLOR='\033[0m'
 
 function info() {
-  (>&2 echo -e "[${WHITE}${BOLD}INFO${NO_COLOR}] $*")
+  (echo >&2 -e "[${WHITE}${BOLD}INFO${NO_COLOR}] $*")
 }
 
 function error() {
-  (>&2 echo -e "[${RED}ERROR${NO_COLOR}] $*")
+  (echo >&2 -e "[${RED}ERROR${NO_COLOR}] $*")
 }
 
 function warning() {
-  (>&2 echo -e "${YELLOW}[WARNING] $*${NO_COLOR}")
+  (echo >&2 -e "${YELLOW}[WARNING] $*${NO_COLOR}")
 }
 
 function ok() {
-  (>&2 echo -e "[${GREEN}${BOLD} OK ${NO_COLOR}] $*")
+  (echo >&2 -e "[${GREEN}${BOLD} OK ${NO_COLOR}] $*")
 }
 
 function print_delim() {
@@ -92,11 +92,11 @@ function c_family_ext() {
 }
 
 function find_c_cpp_srcs() {
-  find "$@" -type f -name "*.h"   \
-                 -o -name "*.hpp" \
-                 -o -name "*.hxx" \
-                 -o -name "*.cc"  \
-                 -o -name "*.cpp" \
-                 -o -name "*.hxx" \
-                 -o -name "*.cu"
+  find "$@" -type f -name "*.h" \
+    -o -name "*.hpp" \
+    -o -name "*.hxx" \
+    -o -name "*.cc" \
+    -o -name "*.cpp" \
+    -o -name "*.hxx" \
+    -o -name "*.cu"
 }

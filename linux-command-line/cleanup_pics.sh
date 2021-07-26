@@ -12,8 +12,8 @@ function find_images_under_dir() {
   local -n _images="$2"
   readarray -t _images \
     < <(find "${search_dir}" -type f \
-      -exec file --mime-type {} \+ |
-      awk -F':' '{
+      -exec file --mime-type {} \+ \
+      | awk -F':' '{
                 if ($2 ~/image\//)
                     print $1
                 }')

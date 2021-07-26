@@ -27,7 +27,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 #    libssl-dev
 #    libpoco-dev
 
-
 . /tmp/installers/installer_base.sh
 
 THREAD_NUM=$(nproc)
@@ -43,38 +42,38 @@ download_if_not_cached "${PKG_NAME}" "${CHECKSUM}" "${DOWNLOAD_LINK}"
 tar xzf poco-${VERSION}-release.tar.gz
 
 pushd poco-poco-${VERSION}-release
-    mkdir cmakebuild && cd cmakebuild
-    # Keep only PocoFoundation
-    cmake .. \
-        -DENABLE_NETSSL=OFF \
-        -DENABLE_CRYPTO=OFF \
-        -DENABLE_JWT=OFF \
-        -DENABLE_APACHECONNECTOR=OFF \
-        -DENABLE_DATA_MYSQL=OFF \
-        -DENABLE_DATA_POSTGRESQL=OFF \
-        -DENABLE_DATA_ODBC=OFF \
-        -DENABLE_MONGODB=OFF \
-        -DENABLE_REDIS=OFF \
-        -DENABLE_DATA_SQLITE=OFF \
-        -DENABLE_DATA=OFF \
-        -DENABLE_PAGECOMPILER=OFF \
-        -DENABLE_PAGECOMPILER_FILE2PAGE=OFF \
-        -DENABLE_ZIP=OFF \
-        -DENABLE_NET=OFF \
-        -DENABLE_JSON=OFF \
-        -DENABLE_XML=OFF \
-        -DENABLE_PDF=OFF \
-        -DENABLE_POCODOC=OFF \
-        -DENABLE_ENCODINGS=OFF \
-        -DENABLE_UTIL=OFF \
-        -DENABLE_CPPPARSER=OFF \
-        -DENABLE_TESTS=OFF \
-        -DBUILD_SHARED_LIBS=ON \
-        -DCMAKE_INSTALL_PREFIX="${SYSROOT_DIR}" \
-        -DCMAKE_BUILD_TYPE=Release
+mkdir cmakebuild && cd cmakebuild
+# Keep only PocoFoundation
+cmake .. \
+  -DENABLE_NETSSL=OFF \
+  -DENABLE_CRYPTO=OFF \
+  -DENABLE_JWT=OFF \
+  -DENABLE_APACHECONNECTOR=OFF \
+  -DENABLE_DATA_MYSQL=OFF \
+  -DENABLE_DATA_POSTGRESQL=OFF \
+  -DENABLE_DATA_ODBC=OFF \
+  -DENABLE_MONGODB=OFF \
+  -DENABLE_REDIS=OFF \
+  -DENABLE_DATA_SQLITE=OFF \
+  -DENABLE_DATA=OFF \
+  -DENABLE_PAGECOMPILER=OFF \
+  -DENABLE_PAGECOMPILER_FILE2PAGE=OFF \
+  -DENABLE_ZIP=OFF \
+  -DENABLE_NET=OFF \
+  -DENABLE_JSON=OFF \
+  -DENABLE_XML=OFF \
+  -DENABLE_PDF=OFF \
+  -DENABLE_POCODOC=OFF \
+  -DENABLE_ENCODINGS=OFF \
+  -DENABLE_UTIL=OFF \
+  -DENABLE_CPPPARSER=OFF \
+  -DENABLE_TESTS=OFF \
+  -DBUILD_SHARED_LIBS=ON \
+  -DCMAKE_INSTALL_PREFIX="${SYSROOT_DIR}" \
+  -DCMAKE_BUILD_TYPE=Release
 
-    make -j${THREAD_NUM}
-    make install
+make -j${THREAD_NUM}
+make install
 popd
 
 # clean up
