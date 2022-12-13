@@ -8,7 +8,7 @@
 
 ABSL_FLAG(int32_t, answer, 42, "the answer to universe");
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   std::string help_msg = absl::StrCat("Usage:\n  ", argv[0], " <office>");
   absl::SetProgramUsageMessage(help_msg);
   auto remained_args = absl::ParseCommandLine(argc, argv);

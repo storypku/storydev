@@ -4,7 +4,7 @@
  * Ref: https://computing.llnl.gov/tutorials/mpi/samples/C/mpi_struct.c
  * */
 /* Call this before use */
-int mpi_register_complex(MPI_Datatype *mpi_complex_t) {
+int mpi_register_complex(MPI_Datatype* mpi_complex_t) {
   MPI_Datatype plane_types[1];
   int block_counts[1];
   /* MPI_Aint type used to be consistent with syntax of */
@@ -21,7 +21,7 @@ int mpi_register_complex(MPI_Datatype *mpi_complex_t) {
 }
 
 /* Call this before MPI_Finalize() */
-int mpi_deregister_complex(MPI_Datatype *mpi_complex_t) {
+int mpi_deregister_complex(MPI_Datatype* mpi_complex_t) {
   MPI_Type_free(mpi_complex_t);
   return 0;
 }

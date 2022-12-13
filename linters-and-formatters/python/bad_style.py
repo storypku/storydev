@@ -1,7 +1,9 @@
 #! /usr/bin/env python3
 
-import sys, platform
+import platform
+import sys
 from os.path import isfile
+
 
 def hello(who):
     osname = platform.system()

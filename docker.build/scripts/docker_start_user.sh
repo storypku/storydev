@@ -35,7 +35,7 @@ function setup_user_bashrc() {
   local gid="$2"
   local user_home="/home/$3"
   cp -rf /etc/skel/.{profile,bash*} "${user_home}"
-  local RCFILES_DIR="/opt/apollo/rcfiles"
+  local RCFILES_DIR="/opt/rcfiles"
   local rc
   if [[ -d "${RCFILES_DIR}" ]]; then
     for entry in ${RCFILES_DIR}/*; do
@@ -67,7 +67,7 @@ function grant_device_permissions() {
 }
 
 function setup_apollo_directories() {
-  local apollo_dir="/opt/apollo"
+  local apollo_dir="/opt"
   [[ -d "${apollo_dir}" ]] || mkdir -p "${apollo_dir}"
   chown -R "${uid}:${gid}" "${apollo_dir}"
 }

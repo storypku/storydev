@@ -5,7 +5,7 @@
 #include "complex.h"
 #include "matrix_helper.h"  // N
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   int dim = N;
   if (argc == 2) {
     dim = atoi(argv[1]);
@@ -14,14 +14,14 @@ int main(int argc, char *argv[]) {
   struct timeval start_tv, end_tv;
   gettimeofday(&start_tv, NULL);
 
-  complex_t *mat_a = (complex_t *)malloc(dim * dim * sizeof(complex_t));
+  complex_t* mat_a = (complex_t*)malloc(dim * dim * sizeof(complex_t));
 #ifdef MAT_B_IS_COMPLEX
-  complex_t *mat_b = (complex_t *)malloc(dim * dim * sizeof(complex_t));
+  complex_t* mat_b = (complex_t*)malloc(dim * dim * sizeof(complex_t));
 #else
-  double *mat_b = (double *)malloc(dim * dim * sizeof(double));
+  double* mat_b = (double*)malloc(dim * dim * sizeof(double));
 #endif
 
-  complex_t *mat_c = (complex_t *)calloc(dim * dim, sizeof(complex_t));
+  complex_t* mat_c = (complex_t*)calloc(dim * dim, sizeof(complex_t));
 
   for (int i = 0; i < dim; i++) {
     set_elements_of_row_for_mat_a(i, dim, mat_a + i * dim);
@@ -32,13 +32,13 @@ int main(int argc, char *argv[]) {
   }
 
   for (int i = 0; i < dim; i++) {
-    complex_t *array_a = mat_a + i * dim;
-    complex_t *array_c = mat_c + i * dim;
+    complex_t* array_a = mat_a + i * dim;
+    complex_t* array_c = mat_c + i * dim;
     for (int j = 0; j < dim; j++) {
 #ifdef MAT_B_IS_COMPLEX
-      complex_t *array_b = mat_b + j * dim;
+      complex_t* array_b = mat_b + j * dim;
 #else
-      double *array_b = mat_b + j * dim;
+      double* array_b = mat_b + j * dim;
 #endif
       for (int k = 0; k < dim; k++) {
         c_self_add_ab_product(array_a + k, array_b + k, array_c + j);
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
   double result = 0.0;
   for (int i = 0; i < dim; i++) {
     double row_s = 0.0;
-    const complex_t *array_c = mat_c + i * dim;
+    const complex_t* array_c = mat_c + i * dim;
     calc_sum_of_modulus_square_of_row_for_mat_c(array_c, dim, &row_s);
     result += row_s;
   }

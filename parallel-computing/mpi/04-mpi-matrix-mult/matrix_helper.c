@@ -8,7 +8,7 @@
 #define Y(j, dim) ((j - 1) * 1.0 / ((dim)-1))
 
 /* Set elements of a's i-th row */
-void set_elements_of_row_for_mat_a(int i, int dim, complex_t *a) {
+void set_elements_of_row_for_mat_a(int i, int dim, complex_t* a) {
   if (a == NULL) {
     return;
   }
@@ -26,9 +26,9 @@ void set_elements_of_row_for_mat_a(int i, int dim, complex_t *a) {
 /* Set elements of b's j-th column */
 void set_elements_of_col_for_mat_b(int j, int dim,
 #ifdef MAT_B_IS_COMPLEX
-                                   complex_t *b
+                                   complex_t* b
 #else
-                                   double *b
+                                   double* b
 #endif
 ) {
   if (b == NULL) {
@@ -48,8 +48,8 @@ void set_elements_of_col_for_mat_b(int j, int dim,
   }
 }
 
-int calc_sum_of_modulus_square_of_row_for_mat_c(const complex_t *c, int dim,
-                                                double *result_p) {
+int calc_sum_of_modulus_square_of_row_for_mat_c(const complex_t* c, int dim,
+                                                double* result_p) {
   if (c == NULL || result_p == NULL) {
     return -1;
   }
@@ -64,13 +64,13 @@ int calc_sum_of_modulus_square_of_row_for_mat_c(const complex_t *c, int dim,
   return 0;
 }
 
-int c_self_add_ab_product(const complex_t *a,
+int c_self_add_ab_product(const complex_t* a,
 #ifdef MAT_B_IS_COMPLEX
-                          const complex_t *b,
+                          const complex_t* b,
 #else
-                          const double *b,
+                          const double* b,
 #endif
-                          complex_t *c) {
+                          complex_t* c) {
   complex_t prod = {.re = 0.0, .im = 0.0};
 #ifdef MAT_B_IS_COMPLEX
   complex_mult(a, b, &prod);

@@ -3,7 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-int complex_add(const complex_t *a, const complex_t *b, complex_t *c) {
+int complex_add(const complex_t* a, const complex_t* b, complex_t* c) {
   if (a == NULL || b == NULL || c == NULL) {
     return -1;
   }
@@ -14,7 +14,7 @@ int complex_add(const complex_t *a, const complex_t *b, complex_t *c) {
   return 0;
 }
 
-int complex_sub(const complex_t *a, const complex_t *b, complex_t *c) {
+int complex_sub(const complex_t* a, const complex_t* b, complex_t* c) {
   if (a == NULL || b == NULL || c == NULL) {
     return -1;
   }
@@ -25,7 +25,7 @@ int complex_sub(const complex_t *a, const complex_t *b, complex_t *c) {
   return 0;
 }
 
-int complex_mult(const complex_t *a, const complex_t *b, complex_t *c) {
+int complex_mult(const complex_t* a, const complex_t* b, complex_t* c) {
   if (a == NULL || b == NULL || c == NULL) {
     return -1;
   }
@@ -36,13 +36,13 @@ int complex_mult(const complex_t *a, const complex_t *b, complex_t *c) {
   return 0;
 }
 
-static int complex_div_ext_internal(complex_t *z, double factor) {
+static int complex_div_ext_internal(complex_t* z, double factor) {
   z->re /= factor;
   z->im /= factor;
   return 0;
 }
 
-int complex_div(const complex_t *a, const complex_t *b, complex_t *c) {
+int complex_div(const complex_t* a, const complex_t* b, complex_t* c) {
   if (a == NULL || b == NULL || c == NULL) {
     return -1;
   }
@@ -60,7 +60,7 @@ int complex_div(const complex_t *a, const complex_t *b, complex_t *c) {
   return 0;
 }
 
-int complex_conjugate(const complex_t *a, complex_t *b) {
+int complex_conjugate(const complex_t* a, complex_t* b) {
   if (a == NULL || b == NULL) {
     return -1;
   }
@@ -69,7 +69,7 @@ int complex_conjugate(const complex_t *a, complex_t *b) {
   return 0;
 }
 
-int complex_mult_ext(const complex_t *z, double factor, complex_t *result) {
+int complex_mult_ext(const complex_t* z, double factor, complex_t* result) {
   if (z == NULL || result == NULL) {
     return -1;
   }
@@ -78,7 +78,7 @@ int complex_mult_ext(const complex_t *z, double factor, complex_t *result) {
   return 0;
 }
 
-int complex_div_ext(const complex_t *z, double factor, complex_t *result) {
+int complex_div_ext(const complex_t* z, double factor, complex_t* result) {
   if (z == NULL || result == NULL) {
     return -1;
   }
@@ -91,7 +91,7 @@ int complex_div_ext(const complex_t *z, double factor, complex_t *result) {
 }
 
 /* z=a+bi => |z| = sqrt(a^2 + b^2) */
-int complex_modulus(const complex_t *z, double *result) {
+int complex_modulus(const complex_t* z, double* result) {
   if (z == NULL || result == NULL) {
     return -1;
   }
@@ -99,7 +99,7 @@ int complex_modulus(const complex_t *z, double *result) {
   return 0;
 }
 
-int complex_modulus_square(const complex_t *z, double *result) {
+int complex_modulus_square(const complex_t* z, double* result) {
   if (z == NULL || result == NULL) {
     return -1;
   }

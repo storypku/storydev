@@ -5,13 +5,13 @@
 
 typedef long int MyLong;
 
-static void print_usage(const char *progname) {
+static void print_usage(const char* progname) {
   printf("Usage:\n");
   printf("  %s LAST        # Sum of numbers in range [1, LAST]\n", progname);
   printf("  %s FIRST LAST  # Sum of numbers in range [FIRST,LAST]\n", progname);
 }
 
-static void parse_arguments(int argc, char *argv[], int *firstp, int *lastp) {
+static void parse_arguments(int argc, char* argv[], int* firstp, int* lastp) {
   int first_val = 1;
   int last_val = 1000;
   if (argc > 1) {
@@ -31,9 +31,10 @@ static void parse_arguments(int argc, char *argv[], int *firstp, int *lastp) {
   }
 
   if (first_val > last_val) {
-    printf("Start number must be less than or equal to Last number."
-           " However, got Start(%d) > Last(%d)\n",
-           first_val, last_val);
+    printf(
+        "Start number must be less than or equal to Last number."
+        " However, got Start(%d) > Last(%d)\n",
+        first_val, last_val);
     exit(2);
   }
   *firstp = first_val;
@@ -41,8 +42,8 @@ static void parse_arguments(int argc, char *argv[], int *firstp, int *lastp) {
 }
 
 static void determine_range_for_processor(int total_start, int total_last,
-                                          int rank, int N, int *start_p,
-                                          int *last_p, int *extra) {
+                                          int rank, int N, int* start_p,
+                                          int* last_p, int* extra) {
   int total_cnt = (total_last - total_start + 1);
   int avg_cnt = total_cnt / N;
   int remainder = total_cnt % N;
@@ -65,7 +66,7 @@ static MyLong each_processor_compute(int start, int last, int extra) {
   return result;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   // Initialize the MPI environment. The two arguments to MPI Init are not
   // currently used by MPI implementations, but are there in case future
   // implementations might need the arguments.

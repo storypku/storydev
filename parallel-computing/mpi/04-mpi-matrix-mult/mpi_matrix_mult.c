@@ -8,7 +8,7 @@
 #include "matmult_by_mpi.h"
 #include "matrix_helper.h"
 
-static void print_usage(const char *progname) {
+static void print_usage(const char* progname) {
   printf("Usage:\n");
   printf("  %s -h|--help  Show this message\n", progname);
   printf(
@@ -17,8 +17,8 @@ static void print_usage(const char *progname) {
       progname);
 }
 
-static void check_arguments_n_determine_dimension(int argc, char *argv[],
-                                                  int numprocs, int *dim_p) {
+static void check_arguments_n_determine_dimension(int argc, char* argv[],
+                                                  int numprocs, int* dim_p) {
   if (argc > 2) {
     print_usage(argv[0]);
     exit(1);
@@ -49,7 +49,7 @@ static void check_arguments_n_determine_dimension(int argc, char *argv[],
   *dim_p = dimension;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   // Initialize the MPI environment. The two arguments to MPI Init are not
   // currently used by MPI implementations, but are there in case future
   // implementations might need the arguments.

@@ -49,7 +49,7 @@ elif [[ "${TARGET_ARCH}" == "aarch64" ]]; then
   tar xzf ${PKG_NAME}
 
   pushd CMake-${VERSION}
-  ./bootstrap --prefix=/opt/apollo/sysroot
+  ./bootstrap --prefix=/opt/sysroot
   make -j$(nproc)
   make install
   popd

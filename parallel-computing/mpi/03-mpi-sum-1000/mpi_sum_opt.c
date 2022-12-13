@@ -5,13 +5,13 @@
 
 typedef long int MyLong;
 
-static void print_usage(const char *progname) {
+static void print_usage(const char* progname) {
   printf("Usage:\n");
   printf("  %s LAST        # Sum of numbers in range [1, LAST]\n", progname);
   printf("  %s FIRST LAST  # Sum of numbers in range [FIRST,LAST]\n", progname);
 }
 
-static void parse_arguments(int argc, char *argv[], int *firstp, int *lastp) {
+static void parse_arguments(int argc, char* argv[], int* firstp, int* lastp) {
   int first_val = 1;
   int last_val = 1000;
   if (argc > 1) {
@@ -31,16 +31,18 @@ static void parse_arguments(int argc, char *argv[], int *firstp, int *lastp) {
   }
 
   if (first_val > last_val) {
-    printf("Start number must be less than or equal to Last number."
-           " However, got Start(%d) > Last(%d)\n",
-           first_val, last_val);
+    printf(
+        "Start number must be less than or equal to Last number."
+        " However, got Start(%d) > Last(%d)\n",
+        first_val, last_val);
     exit(2);
   }
   *firstp = first_val;
   *lastp = last_val;
 }
 
-static MyLong each_processor_compute(int start, int last, int my_rank, int world_size) {
+static MyLong each_processor_compute(int start, int last, int my_rank,
+                                     int world_size) {
   MyLong result = 0;
   for (int i = start + my_rank; i <= last; i += world_size) {
     result += i;
@@ -48,7 +50,7 @@ static MyLong each_processor_compute(int start, int last, int my_rank, int world
   return result;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   // Initialize the MPI environment. The two arguments to MPI Init are not
   // currently used by MPI implementations, but are there in case future
   // implementations might need the arguments.
@@ -70,7 +72,8 @@ int main(int argc, char *argv[]) {
   int first_val = 0, last_val = 0;
   parse_arguments(argc, argv, &first_val, &last_val);
 
-  MyLong my_answer = each_processor_compute(first_val, last_val, my_rank, world_size);
+  MyLong my_answer =
+      each_processor_compute(first_val, last_val, my_rank, world_size);
   printf("Rank %d/%d from %s, my_answer=%ld\n", my_rank, world_size,
          processor_name, my_answer);
   MyLong final_answer = 0;

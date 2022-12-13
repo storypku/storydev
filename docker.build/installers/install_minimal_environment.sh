@@ -26,7 +26,7 @@ ARCH="$(uname -m)"
 ##----------------------------##
 ##  APT sources.list settings |
 ##----------------------------##
-RCFILES_DIR=/opt/apollo/rcfiles
+RCFILES_DIR=/opt/rcfiles
 if [ "${ARCH}" = "x86_64" ]; then
   if [ "${MY_GEO}" = "cn" ]; then
     cp -f "${RCFILES_DIR}/sources.list.cn.x86_64" /etc/apt/sources.list
