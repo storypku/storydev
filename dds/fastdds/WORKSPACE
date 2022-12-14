@@ -1,0 +1,32 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "llvm_x_toolchain",
+    sha256 = "5b06e565b95a7c62ef7e36de92be24b69947a1ea39ef5fa9788573b47594b7bf",
+    strip_prefix = "llvm-x-toolchain-0.0.1",
+    urls = [
+        "https://github.com/storypku/llvm-x-toolchain/archive/0.0.1.tar.gz",
+    ],
+)
+
+load("@llvm_x_toolchain//bazel:repositories.bzl", "llvm_x_toolchain_repositories")
+
+llvm_x_toolchain_repositories(llvm_version = "15.0.6")
+
+load("@llvm_x_toolchain//bazel:llvm_x_toolchain_init.bzl", "llvm_x_toolchain_init")
+
+llvm_x_toolchain_init()
+
+# Setup toolchains
+load("@llvm_x_toolchain//toolchain:rules.bzl", "llvm_toolchain")
+
+llvm_toolchain(
+    name = "llvm_toolchain",
+    stdlib = {
+        "": "stdc++",
+    },
+)
+
+load("@llvm_toolchain//:toolchains.bzl", "llvm_register_toolchains")
+
+llvm_register_toolchains()
