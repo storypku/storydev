@@ -33,3 +33,4 @@
 
 docker.build/archive/
 bazel-*
+fastdds.srcs
